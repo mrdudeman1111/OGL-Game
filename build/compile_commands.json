@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/ethan/Repos/HIP/build",
+  "command": "/usr/bin/g++  -I/home/ethan/Repos/HIP -g -o CMakeFiles/Opengl.dir/OGL.cpp.o -c /home/ethan/Repos/HIP/OGL.cpp",
+  "file": "/home/ethan/Repos/HIP/OGL.cpp"
+}
+]

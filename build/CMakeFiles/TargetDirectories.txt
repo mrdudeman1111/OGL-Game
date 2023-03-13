@@ -1,0 +1,3 @@
+/home/ethan/Repos/HIP/build/CMakeFiles/Opengl.dir
+/home/ethan/Repos/HIP/build/CMakeFiles/edit_cache.dir
+/home/ethan/Repos/HIP/build/CMakeFiles/rebuild_cache.dir

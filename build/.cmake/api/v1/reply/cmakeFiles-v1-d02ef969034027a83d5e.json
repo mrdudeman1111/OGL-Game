@@ -122,20 +122,19 @@
 			"path" : "/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
 		},
 		{
+			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/lib/cmake/glfw3/glfw3ConfigVersion.cmake"
+			"path" : "/usr/share/cmake/Modules/FindOpenGL.cmake"
 		},
 		{
+			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/lib/cmake/glfw3/glfw3Config.cmake"
+			"path" : "/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
 		},
 		{
+			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/lib/cmake/glfw3/glfw3Targets.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/lib/cmake/glfw3/glfw3Targets-noconfig.cmake"
+			"path" : "/usr/share/cmake/Modules/FindPackageMessage.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -158,19 +157,32 @@
 			"path" : "/usr/share/cmake/Modules/SelectLibraryConfigurations.cmake"
 		},
 		{
-			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/share/cmake/Modules/FindOpenGL.cmake"
+			"path" : "/usr/lib/cmake/glfw3/glfw3ConfigVersion.cmake"
 		},
 		{
-			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/share/cmake/Modules/FindPackageHandleStandardArgs.cmake"
+			"path" : "/usr/lib/cmake/glfw3/glfw3Config.cmake"
 		},
 		{
-			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/share/cmake/Modules/FindPackageMessage.cmake"
+			"path" : "/usr/lib/cmake/glfw3/glfw3Targets.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/lib/cmake/glfw3/glfw3Targets-noconfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/lib/cmake/glm/glmConfigVersion.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/lib/cmake/glm/glmConfig.cmake"
+		},
+		{
+			"isExternal" : true,
+			"path" : "/usr/lib/cmake/glm/glmTargets.cmake"
 		},
 		{
 			"isExternal" : true,

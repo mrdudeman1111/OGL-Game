@@ -1318,6 +1318,18 @@
 			"value" : "GLFW_DIR-NOTFOUND"
 		},
 		{
+			"name" : "GLM_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for GLM."
+				}
+			],
+			"type" : "PATH",
+			"value" : "GLM_DIR-NOTFOUND"
+		},
+		{
 			"name" : "LIBRARY_OUTPUT_PATH",
 			"properties" : 
 			[
@@ -1624,6 +1636,18 @@
 			],
 			"type" : "PATH",
 			"value" : "glfw_DIR-NOTFOUND"
+		},
+		{
+			"name" : "glm_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for glm."
+				}
+			],
+			"type" : "PATH",
+			"value" : "/usr/lib/cmake/glm"
 		},
 		{
 			"name" : "stb_DIR",

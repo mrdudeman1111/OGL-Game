@@ -2,6 +2,10 @@
 #include <fstream>
 #include <vector>
 
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <assimp/Vertex.h>
+
 #include <OGL.h>
 
 #define STBI_IMPLEMENTATION
@@ -44,6 +48,23 @@ GLuint LoadTexture(const char* TexPath)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, ImageChar);
 
     stbi_image_free(ImageChar);
+}
+
+void MeshLoader::LoadNode(aiNode* Node)
+{
+    if(Node->mNumChildren != 0)
+    {
+        for(uint32_t i = 0; i < Node->mNumChildren; i++)
+        {
+            LoadNode
+        }
+    }
+}
+
+void MeshLoader::LoadModel(const char* ModelPath)
+{
+    const aiScene* Scene = AssImporter.ReadFile(ModelPath, aiProcess_Triangulate);
+    if(Scene->mRootNode.)
 }
 
 int main()

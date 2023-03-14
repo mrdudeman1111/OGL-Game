@@ -245,6 +245,9 @@ GLFW3_DIR:PATH=GLFW3_DIR-NOTFOUND
 //The directory containing a CMake configuration file for GLFW.
 GLFW_DIR:PATH=GLFW_DIR-NOTFOUND
 
+//The directory containing a CMake configuration file for GLM.
+GLM_DIR:PATH=GLM_DIR-NOTFOUND
+
 //Single output directory for building all libraries.
 LIBRARY_OUTPUT_PATH:PATH=
 
@@ -310,6 +313,9 @@ glfw3_DIR:PATH=/usr/lib/cmake/glfw3
 
 //The directory containing a CMake configuration file for glfw.
 glfw_DIR:PATH=glfw_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for glm.
+glm_DIR:PATH=/usr/lib/cmake/glm
 
 //The directory containing a CMake configuration file for stb.
 stb_DIR:PATH=stb_DIR-NOTFOUND

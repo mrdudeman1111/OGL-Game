@@ -1,5 +1,10 @@
+#include <iostream>
+#include <vector>
+
 #include <GL/glew.h>
 #include <GL/gl.h>
+
+#include <assimp/scene.h>
 
 #include <glm/glm.hpp>
 
@@ -8,7 +13,6 @@
 
 #include <assimp/Importer.hpp>
 
-typedef std::vector<Mesh> MeshList;
 
 std::string LoadFile(const char* ShaderPath);
 
@@ -18,25 +22,40 @@ struct Vertex
 {
     public:
     // Cartesian Coordinates
-    std::vector<float> vLoc;
-    std::vector<float> vCol;
-    std::vector<float> vNorm;
+     glm::vec3 vPos;
+    // glm::vec4 vCol;
+    // glm::vec3 vNorm;
+    // glm::vec3 vCoord;
+};
+
+struct CameraBuffer
+{
+    public:
+    glm::mat4 World, View, Projection;
 };
 
 struct Mesh
 {
     public:
     std::vector<Vertex> Vertices;
-    glm::mat4 Transform;
+    std::vector<uint> Indices;
+
+    GLuint VertexBuffer;
+    GLuint IndexBuffer;
+    GLuint VertexAttribs;
+
     std::string Name;
+    glm::mat4 Transform;
 };
 
 class MeshLoader
 {
     public:
-    void LoadNode(aiNode* Node)
-    MeshList LoadModel(const char* ModelPath);
+    std::vector<Mesh> LoadModel(const char* ModelPath);
 
     private:
     Assimp::Importer AssImporter;
+
+    void LoadNode(aiNode* Node, aiMesh* aiMeshes, std::vector<Mesh>* Meshes);
+    Mesh ParseMesh(aiMesh* aiMesh);
 };

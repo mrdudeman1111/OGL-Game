@@ -14,4 +14,4 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(Opengl ${SOURCES})
 
-target_link_libraries(Opengl GLEW OpenGL glfw assimp stb glm)
+target_link_libraries(Opengl GLEW OpenGL glfw assimp glm)

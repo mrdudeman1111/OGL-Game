@@ -1,1 +1,1 @@
-/usr/bin/g++ -g CMakeFiles/Opengl.dir/OGL.cpp.o -o Opengl  -lGLEW -lOpenGL /usr/lib/libglfw.so.3.3 -lassimp -lstb 
+/usr/bin/g++ -g CMakeFiles/Opengl.dir/OGL.cpp.o -o Opengl  -lGLEW -lOpenGL /usr/lib/libglfw.so.3.3 -lassimp 

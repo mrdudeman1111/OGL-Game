@@ -221,6 +221,12 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 //Single output directory for building all executables.
 EXECUTABLE_OUTPUT_PATH:PATH=
 
+//The directory containing a CMake configuration file for GL3W.
+GL3W_DIR:PATH=GL3W_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for GLAD.
+GLAD_DIR:PATH=GLAD_DIR-NOTFOUND
+
 //The directory containing a CMake configuration file for GLEW.
 GLEW_DIR:PATH=GLEW_DIR-NOTFOUND
 
@@ -247,6 +253,9 @@ GLFW_DIR:PATH=GLFW_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for GLM.
 GLM_DIR:PATH=GLM_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for Glad.
+Glad_DIR:PATH=Glad_DIR-NOTFOUND
 
 //Single output directory for building all libraries.
 LIBRARY_OUTPUT_PATH:PATH=
@@ -307,6 +316,12 @@ assim_DIR:PATH=assim_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for assimp.
 assimp_DIR:PATH=/usr/lib/cmake/assimp-5.2
+
+//The directory containing a CMake configuration file for gl3w.
+gl3w_DIR:PATH=gl3w_DIR-NOTFOUND
+
+//The directory containing a CMake configuration file for glad.
+glad_DIR:PATH=glad_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for glfw3.
 glfw3_DIR:PATH=/usr/lib/cmake/glfw3

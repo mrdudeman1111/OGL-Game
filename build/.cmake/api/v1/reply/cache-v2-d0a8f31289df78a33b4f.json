@@ -1202,6 +1202,30 @@
 			"value" : "[/usr/lib/libOpenGL.so][/usr/lib/libGLX.so][/usr/include][c ][v()]"
 		},
 		{
+			"name" : "GL3W_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for GL3W."
+				}
+			],
+			"type" : "PATH",
+			"value" : "GL3W_DIR-NOTFOUND"
+		},
+		{
+			"name" : "GLAD_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for GLAD."
+				}
+			],
+			"type" : "PATH",
+			"value" : "GLAD_DIR-NOTFOUND"
+		},
+		{
 			"name" : "GLEW_DIR",
 			"properties" : 
 			[
@@ -1328,6 +1352,18 @@
 			],
 			"type" : "PATH",
 			"value" : "GLM_DIR-NOTFOUND"
+		},
+		{
+			"name" : "Glad_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Glad."
+				}
+			],
+			"type" : "PATH",
+			"value" : "Glad_DIR-NOTFOUND"
 		},
 		{
 			"name" : "LIBRARY_OUTPUT_PATH",
@@ -1612,6 +1648,30 @@
 			],
 			"type" : "PATH",
 			"value" : "/usr/lib/cmake/assimp-5.2"
+		},
+		{
+			"name" : "gl3w_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for gl3w."
+				}
+			],
+			"type" : "PATH",
+			"value" : "gl3w_DIR-NOTFOUND"
+		},
+		{
+			"name" : "glad_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for glad."
+				}
+			],
+			"type" : "PATH",
+			"value" : "glad_DIR-NOTFOUND"
 		},
 		{
 			"name" : "glfw3_DIR",

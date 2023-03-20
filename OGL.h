@@ -1,61 +1,39 @@
 #include <iostream>
 #include <vector>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
-
-#include <assimp/scene.h>
-
-#include <glm/glm.hpp>
+#include <Mesh.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
-#include <assimp/Importer.hpp>
-
-
-std::string LoadFile(const char* ShaderPath);
+const char* LoadFile(const char* ShaderPath);
 
 GLuint LoadTexture(const char* TexPath);
-
-struct Vertex
-{
-    public:
-    // Cartesian Coordinates
-     glm::vec3 vPos;
-    // glm::vec4 vCol;
-    // glm::vec3 vNorm;
-    // glm::vec3 vCoord;
-};
 
 struct CameraBuffer
 {
     public:
-    glm::mat4 World, View, Projection;
+    glm::mat4 World;
+    glm::mat4 View;
+    glm::mat4 Projection;
 };
 
-struct Mesh
+enum CamDirection
 {
-    public:
-    std::vector<Vertex> Vertices;
-    std::vector<uint> Indices;
-
-    GLuint VertexBuffer;
-    GLuint IndexBuffer;
-    GLuint VertexAttribs;
-
-    std::string Name;
-    glm::mat4 Transform;
+    FORWARD,
+    UP,
+    RIGHT
 };
 
-class MeshLoader
+class Camera
 {
     public:
-    std::vector<Mesh> LoadModel(const char* ModelPath);
+    CameraBuffer Buffer;
+    GLuint Handle;
+    glm::vec3 Position;
+    glm::vec4 Rotation;
 
-    private:
-    Assimp::Importer AssImporter;
-
-    void LoadNode(aiNode* Node, aiMesh* aiMeshes, std::vector<Mesh>* Meshes);
-    Mesh ParseMesh(aiMesh* aiMesh);
+    void Update();
+    glm::vec3 GetDirVector(CamDirection Dir);
+    void PollInputs(float DeltaTime);
 };

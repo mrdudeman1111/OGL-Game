@@ -183,22 +183,6 @@
 		{
 			"isExternal" : true,
 			"path" : "/usr/lib/cmake/glm/glmTargets.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/lib/cmake/assimp-5.2/assimpConfigVersion.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/lib/cmake/assimp-5.2/assimpConfig.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/lib/cmake/assimp-5.2/assimpTargets.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/lib/cmake/assimp-5.2/assimpTargets-release.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",

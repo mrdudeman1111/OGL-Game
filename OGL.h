@@ -30,8 +30,9 @@ class Camera
     public:
     CameraBuffer Buffer;
     GLuint Handle;
+    glm::mat4 Transform;
     glm::vec3 Position;
-    glm::vec4 Rotation;
+    glm::vec3 Rotation;
 
     void Update();
     glm::vec3 GetDirVector(CamDirection Dir);

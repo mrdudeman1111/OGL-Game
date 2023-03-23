@@ -17,9 +17,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
-GLFWwindow* Window;
+GLFWwindow *Window;
 
-const char* LoadFile(const char *ShaderPath)
+const char *LoadFile(const char *ShaderPath)
 {
     std::ifstream FileStream(ShaderPath);
 
@@ -34,7 +34,7 @@ const char* LoadFile(const char *ShaderPath)
     std::cout << "Reading file of " << FileSize << " size\n";
     FileStream.seekg(0);
 
-    char* pCode = new char[FileSize];
+    char *pCode = new char[FileSize];
 
     FileStream.read(pCode, FileSize);
 
@@ -65,13 +65,13 @@ GLuint LoadTexture(const char *TexPath)
     return GlTex;
 }
 
-void ErrorCallback(int Error, const char* Msg)
+void ErrorCallback(int Error, const char *Msg)
 {
     printf("GLFW : %d %s", Error, Msg);
     throw std::runtime_error(Msg);
 }
 
-void MessageCallback(GLenum Source, GLenum Type, GLuint Id, GLenum Severity, GLsizei Length, const GLchar* Message, const void* UserArg)
+void MessageCallback(GLenum Source, GLenum Type, GLuint Id, GLenum Severity, GLsizei Length, const GLchar *Message, const void *UserArg)
 {
     std::cout << "---------------------------Debug:\n";
     printf("Source : %s", glGetString(Source));
@@ -84,7 +84,7 @@ bool CheckKey(uint32_t Key)
 {
     uint32_t KeyState = glfwGetKey(Window, Key);
 
-    if(KeyState == GLFW_PRESS)
+    if (KeyState == GLFW_PRESS)
     {
         return true;
     }
@@ -94,50 +94,82 @@ bool CheckKey(uint32_t Key)
 
 glm::vec3 Camera::GetDirVector(CamDirection Dir)
 {
-    glm::mat4 Inverted = glm::inverse(Buffer.View);
-
-    if(Dir == FORWARD)
-    {
-        return glm::normalize(glm::vec3(Inverted[2]));
-    }
-    else if(Dir == RIGHT)
-    {
-        return glm::normalize(glm::vec3(Inverted[0]));
-    }
-    else if(Dir == UP)
-    {
-        return glm::normalize(glm::vec3(Inverted[1]));
-    }
-    else
-    {
-        std::cout << "Can't retrieve camera vector\n";
-    }
 }
 
 void Camera::PollInputs(float DeltaTime)
 {
-    std::cout << "DeltaTime is " << DeltaTime << std::endl;
-    if(CheckKey(GLFW_KEY_W))
+    if (CheckKey(GLFW_KEY_W))
     {
         Position += GetDirVector(FORWARD) * DeltaTime * 5.f;
     }
-    if(CheckKey(GLFW_KEY_S))
+
+    if (CheckKey(GLFW_KEY_S))
     {
         Position -= GetDirVector(FORWARD) * DeltaTime * 5.f;
     }
-    if(CheckKey(GLFW_KEY_A))
-    {
-        Position -= GetDirVector(RIGHT) * DeltaTime * 5.f;
-    }
-    if(CheckKey(GLFW_KEY_D))
+
+    if (CheckKey(GLFW_KEY_A))
     {
         Position += GetDirVector(RIGHT) * DeltaTime * 5.f;
     }
+
+    if (CheckKey(GLFW_KEY_D))
+    {
+        Position += GetDirVector(RIGHT) * DeltaTime * 5.f;
+    }
+
+    if (CheckKey(GLFW_KEY_SPACE))
+    {
+        Position += GetDirVector(UP) * DeltaTime * 5.f;
+    }
+
+    if (CheckKey(GLFW_KEY_LEFT_CONTROL))
+    {
+        Position -= GetDirVector(UP) * DeltaTime * 5.f;
+    }
+
+    // if(CheckKey(GLFW_KEY_UP));
+    // {
+    //     std::cout << "Up\n";
+    //     Rotation.y += DeltaTime * 100.f;
+    // }
+
+    // if(CheckKey(GLFW_KEY_DOWN))
+    // {
+    //     std::cout << "Down\n";
+    //     Rotation.y -= DeltaTime * 100.f;
+    // }
+
+    // if(CheckKey(GLFW_KEY_RIGHT))
+    // {
+    //     std::cout << "Right\n";
+    //     Rotation.z += DeltaTime * 100.f;
+    // }
+
+    // if(CheckKey(GLFW_KEY_LEFT))
+    // {
+    //     std::cout << "Left\n";
+    //     Rotation.z -= DeltaTime * 100.f;
+    // }
+
+    double x, y;
+    glfwGetCursorPos(Window, &x, &y);
+
+    Rotation.z += (x - MousePos.x) * DeltaTime * 10.f;
+    Rotation.y += (y - MousePos.y) * DeltaTime * 10.f;
+
+    std::cout << x << " " << y << std::endl;
+
+    MousePos = glm::vec2(x, y);
 }
 
 void Camera::Update()
 {
-    Buffer.View = glm::translate(glm::mat4(1.f), Position);
+    Buffer.View = glm::mat4(1.f);
+    Buffer.View = glm::translate(Buffer.View, Position);
+    Buffer.View = glm::rotate(Buffer.View, Rotation.z, glm::vec3(0.f, 0.f, 1.f));
+    Buffer.View = glm::rotate(Buffer.View, Rotation.y, GetDirVector(RIGHT));
+    Buffer.View = glm::rotate(Buffer.View, Rotation.x, GetDirVector(FORWARD));
     glBindBuffer(GL_UNIFORM_BUFFER, Handle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Buffer), &Buffer, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -179,7 +211,7 @@ int main()
 
     GLint ContextFlags;
     glGetIntegerv(GL_CONTEXT_FLAGS, &ContextFlags);
-    if(!ContextFlags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    if (!ContextFlags & GL_CONTEXT_FLAG_DEBUG_BIT)
     {
         throw std::runtime_error("Not in Debug Context");
     }
@@ -187,31 +219,33 @@ int main()
     GLuint VertShader, FragShader, Program;
 
     VertShader = glCreateShader(GL_VERTEX_SHADER);
-    const char* VertCode = LoadFile("/home/ethan/Repos/HIP/Vert.glsl");
+    const char *VertCode = LoadFile("/home/ethan/Repos/HIP/Vert.glsl");
     // std::cout << "VertShader:\n" << VertCode << std::endl;
     glShaderSource(VertShader, 1, &VertCode, NULL);
     glCompileShader(VertShader);
 
-    int  success;
+    int success;
     char infoLog[512];
     glGetShaderiv(VertShader, GL_COMPILE_STATUS, &success);
-    if(!success)
+    if (!success)
     {
         glGetShaderInfoLog(VertShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
     }
 
     FragShader = glCreateShader(GL_FRAGMENT_SHADER);
-    const char* FragCode = LoadFile("/home/ethan/Repos/HIP/Frag.glsl");
+    const char *FragCode = LoadFile("/home/ethan/Repos/HIP/Frag.glsl");
     // std::cout << "Frag Shader:\n" << FragCode << std::endl;
     glShaderSource(FragShader, 1, &FragCode, NULL);
     glCompileShader(FragShader);
 
     glGetShaderiv(FragShader, GL_COMPILE_STATUS, &success);
-    if(!success)
+    if (!success)
     {
         glGetShaderInfoLog(FragShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
+                  << infoLog << std::endl;
     }
 
     Program = glCreateProgram();
@@ -220,9 +254,8 @@ int main()
     glLinkProgram(Program);
 
     MeshLoader MainMeshLoader;
-    std::vector<Mesh> Meshes = MainMeshLoader.LoadModel("/home/ethan/Repos/HIP/Cube.dae");
+    std::vector<Mesh> Meshes = MainMeshLoader.LoadModel("/home/ethan/Repos/HIP/Snowman.dae");
     Mesh Cube = Meshes[0];
-
 
     glGenVertexArrays(1, &Cube.VertexAttribs);
     glGenBuffers(1, &Cube.VertexBuffer);
@@ -234,7 +267,7 @@ int main()
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Cube.Vertices.size(), NULL, GL_STATIC_DRAW);
 
-    void* VertMem = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
+    void *VertMem = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
     memcpy(VertMem, Cube.Vertices.data(), sizeof(Vertex) * Cube.Vertices.size());
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -243,12 +276,12 @@ int main()
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * Cube.Indices.size(), NULL, GL_STATIC_DRAW);
 
-    void* IndexMem = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_WRITE);
+    void *IndexMem = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_WRITE);
     memcpy(IndexMem, Cube.Indices.data(), sizeof(uint) * Cube.Indices.size());
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
     // glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
     glEnableVertexAttribArray(0);
     // glEnableVertexAttribArray(1);
@@ -261,7 +294,7 @@ int main()
 
     GLuint CBOIndex = glGetUniformBlockIndex(Program, "CameraBuffer");
     glUniformBlockBinding(Program, CBOIndex, 0);
-    if(CBOIndex & GL_INVALID_VALUE)
+    if (CBOIndex & GL_INVALID_VALUE)
     {
         std::cout << "Failed to find CameraBuffer UBO\n";
     }
@@ -272,11 +305,16 @@ int main()
 
     Camera.Buffer.Projection = glm::perspective(glm::radians(45.f), (float)Width / (float)Height, 0.1f, 100.f);
 
-    Camera.Buffer.View = glm::lookAt(glm::vec3(-10.0f, 0.f, 0.f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    Camera.Position = glm::vec3(0.f, 0.f, -10.f);
+
+    Camera.Rotation = glm::vec3(0.f, 0.f, 0.f);
 
     glGenBuffers(1, &Camera.Handle);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(Window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 
     double DeltaTime;
     int CurrentTime;
@@ -303,7 +341,7 @@ int main()
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, Camera.Handle);
         glBindVertexArray(Cube.VertexAttribs);
         glDrawElements(GL_TRIANGLES, Cube.Indices.size(), GL_UNSIGNED_INT, 0);
- 
+
         glfwSwapBuffers(Window);
     }
 
@@ -311,7 +349,6 @@ int main()
     glDeleteBuffers(1, &Cube.VertexBuffer);
     glDeleteBuffers(1, &Cube.IndexBuffer);
     glDeleteProgram(Program);
-
 
     // while(!glfwWindowShouldClose(Window))
     // {
@@ -331,5 +368,4 @@ int main()
     //     glfwSwapBuffers(Window);
     //     glfwPollEvents();
     // }
-
 }

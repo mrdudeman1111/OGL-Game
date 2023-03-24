@@ -12,5 +12,7 @@ file(GLOB SOURCES
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 add_executable(Opengl ${SOURCES})
+# add_executable(Tester ${CMAKE_CURRENT_SOURCE_DIR}/Test.cpp)
 
 target_link_libraries(Opengl GLEW OpenGL glfw assimp glm)
+# target_link_libraries(Tester glm)

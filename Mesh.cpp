@@ -51,8 +51,8 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
     {
         Vertex Vert;
         Vert.vPos.x = aiMesh->mVertices[i].x;
-        Vert.vPos.y = aiMesh->mVertices[i].y;
-        Vert.vPos.z = aiMesh->mVertices[i].z;
+        Vert.vPos.y = aiMesh->mVertices[i].z;
+        Vert.vPos.z = aiMesh->mVertices[i].y;
 
         // if(aiMesh->HasVertexColors(i))
         // {

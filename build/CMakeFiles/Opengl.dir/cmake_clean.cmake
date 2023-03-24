@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Opengl.dir/Mesh.cpp.o.d"
   "CMakeFiles/Opengl.dir/OGL.cpp.o"
   "CMakeFiles/Opengl.dir/OGL.cpp.o.d"
+  "CMakeFiles/Opengl.dir/Test.cpp.o"
+  "CMakeFiles/Opengl.dir/Test.cpp.o.d"
   "Opengl"
   "Opengl.pdb"
 )

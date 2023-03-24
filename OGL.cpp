@@ -94,23 +94,36 @@ bool CheckKey(uint32_t Key)
 
 glm::vec3 Camera::GetDirVector(CamDirection Dir)
 {
+    if(Dir == FORWARD)
+    {
+        // The Camera Transform will face on the - forward axis (this is because the view matrix is equal to the inverse of this matrix, so to account for that, we multiply forward by -1)
+        return  glm::normalize(Transform[2]);
+    }
+    else if(Dir == RIGHT)
+    {
+        return glm::normalize(Transform[0]);
+    }
+    else if(Dir == UP)
+    {
+        return glm::normalize(Transform[1]);
+    }
 }
 
 void Camera::PollInputs(float DeltaTime)
 {
     if (CheckKey(GLFW_KEY_W))
     {
-        Position += GetDirVector(FORWARD) * DeltaTime * 5.f;
+        Position -= GetDirVector(FORWARD) * DeltaTime * 5.f;
     }
 
     if (CheckKey(GLFW_KEY_S))
     {
-        Position -= GetDirVector(FORWARD) * DeltaTime * 5.f;
+        Position += GetDirVector(FORWARD) * DeltaTime * 5.f;
     }
 
     if (CheckKey(GLFW_KEY_A))
     {
-        Position += GetDirVector(RIGHT) * DeltaTime * 5.f;
+        Position -= GetDirVector(RIGHT) * DeltaTime * 5.f;
     }
 
     if (CheckKey(GLFW_KEY_D))
@@ -128,48 +141,70 @@ void Camera::PollInputs(float DeltaTime)
         Position -= GetDirVector(UP) * DeltaTime * 5.f;
     }
 
-    // if(CheckKey(GLFW_KEY_UP));
+    // if(CheckKey(GLFW_KEY_I))
     // {
-    //     std::cout << "Up\n";
-    //     Rotation.y += DeltaTime * 100.f;
+    //     Pitch += DeltaTime * 10.f;
     // }
 
-    // if(CheckKey(GLFW_KEY_DOWN))
+    // if(CheckKey(GLFW_KEY_K))
     // {
-    //     std::cout << "Down\n";
-    //     Rotation.y -= DeltaTime * 100.f;
+    //     Pitch -= DeltaTime * 10.f;
     // }
 
-    // if(CheckKey(GLFW_KEY_RIGHT))
+    // if(CheckKey(GLFW_KEY_J))
     // {
-    //     std::cout << "Right\n";
-    //     Rotation.z += DeltaTime * 100.f;
+    //     Yaw += DeltaTime * 10.f;
     // }
 
-    // if(CheckKey(GLFW_KEY_LEFT))
+    // if(CheckKey(GLFW_KEY_L))
     // {
-    //     std::cout << "Left\n";
-    //     Rotation.z -= DeltaTime * 100.f;
+    //     Yaw -= DeltaTime * 10.f;
     // }
 
     double x, y;
     glfwGetCursorPos(Window, &x, &y);
 
-    Rotation.z += (x - MousePos.x) * DeltaTime * 10.f;
-    Rotation.y += (y - MousePos.y) * DeltaTime * 10.f;
-
-    std::cout << x << " " << y << std::endl;
+    Yaw -= (x - MousePos.x) * DeltaTime * 1.f;
+    Pitch -= (y - MousePos.y) * DeltaTime * 1.f;
+    if(Pitch >= M_PI)
+    {
+        Pitch = M_PI;
+    }
+    else if(Pitch <= -M_PI)
+    {
+        Pitch = -M_PI;
+    }
 
     MousePos = glm::vec2(x, y);
 }
 
+void PrintVec(glm::vec4& Vec)
+{
+    printf("%.2f %.2f, %.2f, %.2f\n", Vec[0], Vec[1], Vec[2], Vec[3]);
+}
+
 void Camera::Update()
 {
-    Buffer.View = glm::mat4(1.f);
-    Buffer.View = glm::translate(Buffer.View, Position);
-    Buffer.View = glm::rotate(Buffer.View, Rotation.z, glm::vec3(0.f, 0.f, 1.f));
-    Buffer.View = glm::rotate(Buffer.View, Rotation.y, GetDirVector(RIGHT));
-    Buffer.View = glm::rotate(Buffer.View, Rotation.x, GetDirVector(FORWARD));
+    Transform = glm::translate(glm::mat4(1.0f), Position);
+    Transform = glm::rotate(Transform, Yaw, glm::vec3(0.f, 1.f, 0.f));
+    Transform = glm::rotate(Transform, Pitch, glm::normalize(glm::vec3(Transform[0])));
+    Transform = glm::rotate(Transform, Roll, GetDirVector(FORWARD));
+    Buffer.View = glm::inverse(Transform);
+
+    // printf("%.2f %.2f %.2f\n", Roll, Pitch, Yaw);
+
+    PrintVec(Transform[0]);
+    PrintVec(Transform[1]);
+    PrintVec(Transform[2]);
+    PrintVec(Transform[3]);
+    std::cout << "----------------------------\n";
+
+    // PrintVec(Buffer.View[0]);
+    // PrintVec(Buffer.View[1]);
+    // PrintVec(Buffer.View[2]);
+    // PrintVec(Buffer.View[3]);
+    // std::cout << "-----------------------------------\n";
+
     glBindBuffer(GL_UNIFORM_BUFFER, Handle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Buffer), &Buffer, GL_DYNAMIC_DRAW);
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -230,8 +265,7 @@ int main()
     if (!success)
     {
         glGetShaderInfoLog(VertShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     FragShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -244,8 +278,7 @@ int main()
     if (!success)
     {
         glGetShaderInfoLog(FragShader, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                  << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
     }
 
     Program = glCreateProgram();
@@ -303,11 +336,9 @@ int main()
     Camera.Buffer.World = glm::mat4(1.0f);
     Camera.Buffer.Projection = glm::mat4(1.0f);
 
-    Camera.Buffer.Projection = glm::perspective(glm::radians(45.f), (float)Width / (float)Height, 0.1f, 100.f);
+    Camera.Buffer.Projection = glm::perspective(45.f, (float)Width / (float)Height, 0.1f, 100.f);
 
-    Camera.Position = glm::vec3(0.f, 0.f, -10.f);
-
-    Camera.Rotation = glm::vec3(0.f, 0.f, 0.f);
+    Camera.Position = glm::vec3(0.f, 0.f, 10.f);
 
     glGenBuffers(1, &Camera.Handle);
 

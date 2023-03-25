@@ -2,7 +2,7 @@
 
 #pragma shader_stage(fragment)
 
-// layout(location=0) in vec4 InColor;
+layout(location=0) in vec4 InColor;
 
 layout(location=0) out vec4 OutColor;
 

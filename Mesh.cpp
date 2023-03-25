@@ -54,7 +54,7 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
         Vert.vPos.y = aiMesh->mVertices[i].z;
         Vert.vPos.z = aiMesh->mVertices[i].y;
 
-        // if(aiMesh->HasVertexColors(i))
+        // if(aiMesh->mColors[i] != nullptr)
         // {
         //     Vert.vCol.r = aiMesh->mColors[i]->r;
         //     Vert.vCol.g = aiMesh->mColors[i]->g;
@@ -62,12 +62,12 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
         //     Vert.vCol.a = aiMesh->mColors[i]->a;
         // }
 
-        // if(aiMesh->HasNormals())
-        // {
-        //     Vert.vNorm.x = aiMesh->mNormals[i].x;
-        //     Vert.vNorm.y = aiMesh->mNormals[i].y;
-        //     Vert.vNorm.z = aiMesh->mNormals[i].z;
-        // }
+        if(aiMesh->HasNormals())
+        {
+            Vert.vNorm.x = aiMesh->mNormals[i].x;
+            Vert.vNorm.y = aiMesh->mNormals[i].y;
+            Vert.vNorm.z = aiMesh->mNormals[i].z;
+        }
 
         // if(aiMesh->HasTextureCoords(i))
         // {

@@ -21,9 +21,7 @@ GLFWwindow *Window;
 
 const char *LoadFile(const char *ShaderPath)
 {
-    std::ifstream FileStream(ShaderPath);
-
-    FileStream.seekg(0, std::ios::end); // go to end of file so we can grab size with tellg.
+    std::ifstream FileStream(ShaderPath, std::ios::ate);
 
     if (!FileStream.is_open())
     {
@@ -74,10 +72,10 @@ void ErrorCallback(int Error, const char *Msg)
 void MessageCallback(GLenum Source, GLenum Type, GLuint Id, GLenum Severity, GLsizei Length, const GLchar *Message, const void *UserArg)
 {
     std::cout << "---------------------------Debug:\n";
-    printf("Source : %s", glGetString(Source));
-    printf("Type : %s", glGetString(Type));
-    printf("Severity : %s", glGetString(Severity));
-    printf("Message : %s", Message);
+    printf("Source : %s\n", glGetString(Source));
+    printf("Type : %s\n", glGetString(Type));
+    printf("Severity : %s\n", glGetString(Severity));
+    printf("Message : %s\n", Message);
 }
 
 bool CheckKey(uint32_t Key)
@@ -220,28 +218,28 @@ int main()
 
     std::cout << "Glew initiated with " << glewGetErrorString(glewInit()) << std::endl;
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(MessageCallback, NULL);
-    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_DEBUG_OUTPUT);
+    // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    // glDebugMessageCallback(MessageCallback, NULL);
+    // glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 
     int Width, Height;
     glfwGetFramebufferSize(Window, &Width, &Height);
     glViewport(0, 0, Width, Height);
 
-    GLint ContextFlags;
-    glGetIntegerv(GL_CONTEXT_FLAGS, &ContextFlags);
-    if (!ContextFlags & GL_CONTEXT_FLAG_DEBUG_BIT)
-    {
-        throw std::runtime_error("Not in Debug Context");
-    }
+    // GLint ContextFlags;
+    // glGetIntegerv(GL_CONTEXT_FLAGS, &ContextFlags);
+    // if (!ContextFlags & GL_CONTEXT_FLAG_DEBUG_BIT)
+    // {
+    //     throw std::runtime_error("Not in Debug Context");
+    // }
 
     GLuint VertShader, FragShader, Program;
 
     VertShader = glCreateShader(GL_VERTEX_SHADER);
     const char *VertCode = LoadFile("/home/ethan/Repos/HIP/Vert.glsl");
-    // std::cout << "VertShader:\n" << VertCode << std::endl;
+    std::cout << "VertShader:\n" << VertCode << std::endl;
     glShaderSource(VertShader, 1, &VertCode, NULL);
     glCompileShader(VertShader);
 
@@ -256,7 +254,7 @@ int main()
 
     FragShader = glCreateShader(GL_FRAGMENT_SHADER);
     const char *FragCode = LoadFile("/home/ethan/Repos/HIP/Frag.glsl");
-    // std::cout << "Frag Shader:\n" << FragCode << std::endl;
+    std::cout << "Frag Shader:\n" << FragCode << std::endl;
     glShaderSource(FragShader, 1, &FragCode, NULL);
     glCompileShader(FragShader);
 
@@ -300,10 +298,10 @@ int main()
 
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void *)0);
-    // glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(glm::vec4), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
     glEnableVertexAttribArray(0);
-    // glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -327,16 +325,16 @@ int main()
     Camera.Position = glm::vec3(0.f, 0.f, 10.f);
 
     // Set starting mousePos
-    glfwPollEvents();
-    Camera.PollInputs(0.33);
+        glfwPollEvents();
+        Camera.PollInputs(0.33);
 
-    Camera.Yaw = 0.f;
-    Camera.Roll = 0.f;
-    Camera.Pitch = 0.f;
+        Camera.Yaw = 0.f;
+        Camera.Roll = 0.f;
+        Camera.Pitch = 0.f;
 
     glGenBuffers(1, &Camera.Handle);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT, GL_FILL);
 
     glfwSetInputMode(Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetInputMode(Window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

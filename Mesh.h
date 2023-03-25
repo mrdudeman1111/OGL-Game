@@ -15,7 +15,7 @@ struct Vertex
     // Cartesian Coordinates
     glm::vec3 vPos;
     // glm::vec4 vCol;
-    // glm::vec3 vNorm;
+    glm::vec3 vNorm;
     // glm::vec3 vCoord;
 };
 

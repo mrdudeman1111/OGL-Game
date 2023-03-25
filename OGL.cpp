@@ -187,23 +187,9 @@ void Camera::Update()
 {
     Transform = glm::translate(glm::mat4(1.0f), Position);
     Transform = glm::rotate(Transform, Yaw, glm::vec3(0.f, 1.f, 0.f));
-    Transform = glm::rotate(Transform, Pitch, glm::normalize(glm::vec3(Transform[0])));
-    Transform = glm::rotate(Transform, Roll, GetDirVector(FORWARD));
+    Transform = glm::rotate(Transform, Pitch, glm::vec3(1.f, 0.f, 0.f));
+    Transform = glm::rotate(Transform, Roll, glm::vec3(0.f, 0.f, 1.f));
     Buffer.View = glm::inverse(Transform);
-
-    // printf("%.2f %.2f %.2f\n", Roll, Pitch, Yaw);
-
-    PrintVec(Transform[0]);
-    PrintVec(Transform[1]);
-    PrintVec(Transform[2]);
-    PrintVec(Transform[3]);
-    std::cout << "----------------------------\n";
-
-    // PrintVec(Buffer.View[0]);
-    // PrintVec(Buffer.View[1]);
-    // PrintVec(Buffer.View[2]);
-    // PrintVec(Buffer.View[3]);
-    // std::cout << "-----------------------------------\n";
 
     glBindBuffer(GL_UNIFORM_BUFFER, Handle);
     glBufferData(GL_UNIFORM_BUFFER, sizeof(Buffer), &Buffer, GL_DYNAMIC_DRAW);
@@ -339,6 +325,14 @@ int main()
     Camera.Buffer.Projection = glm::perspective(45.f, (float)Width / (float)Height, 0.1f, 100.f);
 
     Camera.Position = glm::vec3(0.f, 0.f, 10.f);
+
+    // Set starting mousePos
+    glfwPollEvents();
+    Camera.PollInputs(0.33);
+
+    Camera.Yaw = 0.f;
+    Camera.Roll = 0.f;
+    Camera.Pitch = 0.f;
 
     glGenBuffers(1, &Camera.Handle);
 

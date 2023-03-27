@@ -334,10 +334,4 @@ CMakeFiles/Opengl.dir/OGL.cpp.o: /home/ethan/Repos/HIP/OGL.cpp \
  /usr/include/glm/detail/type_half.inl /usr/include/glm/integer.hpp \
  /usr/include/glm/detail/func_integer.inl /usr/include/GL/glew.h \
  /usr/include/GL/glu.h /usr/include/GL/gl.h \
- /usr/include/assimp/Importer.hpp /usr/include/GLFW/glfw3.h \
- /usr/include/stb/stb_image.h /usr/include/c++/12.2.1/stdlib.h \
- /usr/include/c++/12.2.1/math.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/emmintrin.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/xmmintrin.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/mmintrin.h \
- /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/mm_malloc.h
+ /usr/include/assimp/Importer.hpp /usr/include/GLFW/glfw3.h

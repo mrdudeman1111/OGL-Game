@@ -14,9 +14,6 @@
 
 #include <OGL.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
 GLFWwindow *Window;
 
 const char *LoadFile(const char *ShaderPath)
@@ -37,30 +34,6 @@ const char *LoadFile(const char *ShaderPath)
     FileStream.read(pCode, FileSize);
 
     return pCode;
-}
-
-GLuint LoadTexture(const char *TexPath)
-{
-    stbi_uc *ImageChar;
-    int Width, Height, Channels;
-    ImageChar = stbi_load(TexPath, &Width, &Height, &Channels, 4);
-
-    GLuint GlTex;
-    glGenTextures(1, &GlTex);
-    glBindTexture(GL_TEXTURE_2D, GlTex);
-
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, ImageChar);
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    stbi_image_free(ImageChar);
-
-    return GlTex;
 }
 
 void ErrorCallback(int Error, const char *Msg)
@@ -218,7 +191,7 @@ int main()
 
     std::cout << "Glew initiated with " << glewGetErrorString(glewInit()) << std::endl;
 
-    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     // glEnable(GL_DEBUG_OUTPUT);
     // glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     // glDebugMessageCallback(MessageCallback, NULL);
@@ -271,7 +244,7 @@ int main()
     glLinkProgram(Program);
 
     MeshLoader MainMeshLoader;
-    std::vector<Mesh> Meshes = MainMeshLoader.LoadModel("/home/ethan/Repos/HIP/Snowman.dae");
+    std::vector<Mesh> Meshes = MainMeshLoader.LoadModel("/home/ethan/Repos/HIP/ColorCube.dae");
     Mesh Cube = Meshes[0];
 
     glGenVertexArrays(1, &Cube.VertexAttribs);
@@ -282,28 +255,22 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, Cube.VertexBuffer);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Cube.Vertices.size(), NULL, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, Cube.Vertices.size() * sizeof(Vertex), Cube.Vertices.data(), GL_STATIC_DRAW);
 
-    void *VertMem = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_WRITE);
-    memcpy(VertMem, Cube.Vertices.data(), sizeof(Vertex) * Cube.Vertices.size());
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec3), (void*)0);
+        glEnableVertexAttribArray(0);
 
-    glUnmapBuffer(GL_ARRAY_BUFFER);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec3), (void*)sizeof(glm::vec3));
+        glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3*sizeof(glm::vec3), (void*)(2*sizeof(glm::vec3)));
+        glEnableVertexAttribArray(2);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Cube.IndexBuffer);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * Cube.Indices.size(), NULL, GL_STATIC_DRAW);
-
-    void *IndexMem = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_WRITE);
-    memcpy(IndexMem, Cube.Indices.data(), sizeof(uint) * Cube.Indices.size());
-
-    glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, Cube.Indices.size() * sizeof(uint32_t), Cube.Indices.data(), GL_STATIC_DRAW);
 
     glBindVertexArray(0);
 
@@ -361,6 +328,7 @@ int main()
         Camera.Update();
 
         glUseProgram(Program);
+        glBindTexture(GL_TEXTURE_2D, Cube.Texture);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, Camera.Handle);
         glBindVertexArray(Cube.VertexAttribs);
         glDrawElements(GL_TRIANGLES, Cube.Indices.size(), GL_UNSIGNED_INT, 0);

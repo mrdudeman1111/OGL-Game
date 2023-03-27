@@ -14,11 +14,11 @@ struct Vertex
 {
     // Cartesian Coordinates
     glm::vec3 vPos;
-    // glm::vec4 vCol;
     glm::vec3 vNorm;
-    // glm::vec3 vCoord;
+    glm::vec3 vCoord;
 };
 
+GLuint LoadTexture(const char *TexPath);
 
 struct Mesh
 {
@@ -29,6 +29,8 @@ struct Mesh
     GLuint VertexBuffer;
     GLuint IndexBuffer;
     GLuint VertexAttribs;
+
+    GLuint Texture;
 
     void SetupVertAttribs();
 
@@ -44,6 +46,6 @@ class MeshLoader
     private:
     Assimp::Importer AssImporter;
 
-    void LoadNode(aiNode* Node, aiMesh* aiMeshes, std::vector<Mesh>* Meshes);
-    Mesh ParseMesh(aiMesh* aiMesh);
+    void LoadNode(aiNode* Node, aiMesh* aiMeshes, aiMaterial** Materials, std::vector<Mesh>* Meshes);
+    Mesh ParseMesh(aiMesh* aiMesh, aiMaterial* Material);
 };

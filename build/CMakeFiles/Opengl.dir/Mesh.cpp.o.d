@@ -315,4 +315,9 @@ CMakeFiles/Opengl.dir/Mesh.cpp.o: /home/ethan/Repos/HIP/Mesh.cpp \
  /usr/include/c++/12.2.1/bits/node_handle.h \
  /usr/include/c++/12.2.1/bits/unordered_map.h \
  /usr/include/c++/12.2.1/bits/erase_if.h /usr/include/c++/12.2.1/array \
- /usr/include/c++/12.2.1/compare
+ /usr/include/c++/12.2.1/compare /usr/include/stb/stb_image.h \
+ /usr/include/c++/12.2.1/stdlib.h /usr/include/c++/12.2.1/math.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/emmintrin.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/xmmintrin.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/mmintrin.h \
+ /usr/lib/gcc/x86_64-pc-linux-gnu/12.2.1/include/mm_malloc.h

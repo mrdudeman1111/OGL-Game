@@ -3,6 +3,34 @@
 #include <assimp/postprocess.h>
 #include <assimp/Vertex.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb/stb_image.h>
+
+GLuint LoadTexture(const char *TexPath)
+{
+    stbi_uc *ImageChar;
+    int Width, Height, Channels;
+    ImageChar = stbi_load(TexPath, &Width, &Height, &Channels, 4);
+
+    GLuint GlTex;
+    glGenTextures(1, &GlTex);
+    glBindTexture(GL_TEXTURE_2D, GlTex);
+
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTextureParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, ImageChar);
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    stbi_image_free(ImageChar);
+
+    return GlTex;
+}
+
+
 void Mesh::SetupVertAttribs()
 {
     glGenVertexArrays(1, &VertexAttribs);
@@ -41,7 +69,7 @@ void Mesh::SetupVertAttribs()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
+Mesh MeshLoader::ParseMesh(aiMesh* aiMesh, aiMaterial* Material)
 {
     Mesh lMesh;
     lMesh.Name = aiMesh->mName.C_Str();
@@ -54,7 +82,7 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
         Vert.vPos.y = aiMesh->mVertices[i].z;
         Vert.vPos.z = aiMesh->mVertices[i].y;
 
-        // if(aiMesh->mColors[i] != nullptr)
+        // if(aiMesh->mColors[i])
         // {
         //     Vert.vCol.r = aiMesh->mColors[i]->r;
         //     Vert.vCol.g = aiMesh->mColors[i]->g;
@@ -69,12 +97,12 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
             Vert.vNorm.z = aiMesh->mNormals[i].z;
         }
 
-        // if(aiMesh->HasTextureCoords(i))
-        // {
-        //     Vert.vCoord.x = aiMesh->mTextureCoords[i]->x;
-        //     Vert.vCoord.y = aiMesh->mTextureCoords[i]->y;
-        //     Vert.vCoord.z = aiMesh->mTextureCoords[i]->z;
-        // }
+        if(aiMesh->HasTextureCoords(i))
+        {
+            Vert.vCoord.x = aiMesh->mTextureCoords[i]->x;
+            Vert.vCoord.y = aiMesh->mTextureCoords[i]->y;
+            Vert.vCoord.z = aiMesh->mTextureCoords[i]->z;
+        }
 
         lMesh.Vertices.push_back(Vert);
     }
@@ -90,19 +118,26 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh)
         }
     }
 
+    if(Material->GetTextureCount(aiTextureType_BASE_COLOR))
+    {
+        aiString Path;
+        Material->GetTexture(aiTextureType_BASE_COLOR, 0, &Path);
+        lMesh.Texture = LoadTexture(Path.C_Str());
+    }
+
     std::cout << "Imported Mesh Named " << lMesh.Name << std::endl;
 
     return lMesh;
 }
 
-void MeshLoader::LoadNode(aiNode* Node, aiMesh* aiMeshes, std::vector<Mesh>* Meshes)
+void MeshLoader::LoadNode(aiNode* Node, aiMesh* aiMeshes, aiMaterial** Materials, std::vector<Mesh>* Meshes)
 {
     if(Node->mNumChildren != 0)
     {
         for (uint32_t i = 0; i < Node->mNumChildren; i++)
         {
             std::cout << "Loading children of Node Named: " << Node->mChildren[i]->mName.C_Str() << std::endl;
-            LoadNode(Node->mChildren[i], aiMeshes, Meshes);
+            LoadNode(Node->mChildren[i], aiMeshes, Materials, Meshes);
         }
     }
 
@@ -111,7 +146,12 @@ void MeshLoader::LoadNode(aiNode* Node, aiMesh* aiMeshes, std::vector<Mesh>* Mes
         for(uint32_t i = 0; i < Node->mNumMeshes; i++)
         {
             std::cout << "Loading Mesh of Node Named: " << aiMeshes[Node->mMeshes[i]].mName.C_Str() << std::endl;
-            Mesh lMesh = ParseMesh(&aiMeshes[Node->mMeshes[i]]);
+
+            // Get Material Index from the current Mesh.
+            uint32_t MatIndex = aiMeshes[Node->mMeshes[i]].mMaterialIndex;
+
+            // Parse Mesh, Passing a reference to the current 
+            Mesh lMesh = ParseMesh(&aiMeshes[Node->mMeshes[i]], Materials[MatIndex]);
             Meshes->push_back(lMesh);
         }
     }
@@ -125,7 +165,7 @@ std::vector<Mesh> MeshLoader::LoadModel(const char *ModelPath)
     const aiScene* Scene = AssImporter.ReadFile(ModelPath, aiProcess_Triangulate);
     if(Scene->mNumMeshes != 0)
     {
-        LoadNode(Scene->mRootNode, *Scene->mMeshes, &Meshes);
+        LoadNode(Scene->mRootNode, *Scene->mMeshes, Scene->mMaterials, &Meshes);
     }
 
     return Meshes;

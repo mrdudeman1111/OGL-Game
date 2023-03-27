@@ -8,8 +8,6 @@
 
 const char* LoadFile(const char* ShaderPath);
 
-GLuint LoadTexture(const char* TexPath);
-
 struct CameraBuffer
 {
     public:

@@ -73,7 +73,6 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh, aiMaterial* Material)
 {
     Mesh lMesh;
     lMesh.Name = aiMesh->mName.C_Str();
-    std::cout << "Parsing Mesh with name: " << aiMesh->mName.C_Str() << std::endl;
 
     for(uint32_t i = 0; i < aiMesh->mNumVertices; i++)
     {
@@ -125,6 +124,18 @@ Mesh MeshLoader::ParseMesh(aiMesh* aiMesh, aiMaterial* Material)
         lMesh.Texture = LoadTexture(Path.C_Str());
     }
 
+    std::cout << "Mesh has " << Material->GetTextureCount(aiTextureType_DIFFUSE) << " Diffuse textures and " << Material->GetTextureCount(aiTextureType_BASE_COLOR) << " Base Color Textures" << std::endl;
+    if(Material->GetTextureCount(aiTextureType_DIFFUSE) != 0)
+    {
+        aiString TexPath;
+        Material->GetTexture(aiTextureType_DIFFUSE, 0, &TexPath);
+        std::string FilePath;
+        FilePath = "/home/ethan/Repos/HIP/";
+        FilePath.append(TexPath.C_Str());
+        lMesh.Texture = LoadTexture(FilePath.c_str());
+        std::cout << "Loaded Texture Named " << FilePath << std::endl;
+    }
+
     std::cout << "Imported Mesh Named " << lMesh.Name << std::endl;
 
     return lMesh;
@@ -136,7 +147,6 @@ void MeshLoader::LoadNode(aiNode* Node, aiMesh* aiMeshes, aiMaterial** Materials
     {
         for (uint32_t i = 0; i < Node->mNumChildren; i++)
         {
-            std::cout << "Loading children of Node Named: " << Node->mChildren[i]->mName.C_Str() << std::endl;
             LoadNode(Node->mChildren[i], aiMeshes, Materials, Meshes);
         }
     }
@@ -145,7 +155,6 @@ void MeshLoader::LoadNode(aiNode* Node, aiMesh* aiMeshes, aiMaterial** Materials
     {
         for(uint32_t i = 0; i < Node->mNumMeshes; i++)
         {
-            std::cout << "Loading Mesh of Node Named: " << aiMeshes[Node->mMeshes[i]].mName.C_Str() << std::endl;
 
             // Get Material Index from the current Mesh.
             uint32_t MatIndex = aiMeshes[Node->mMeshes[i]].mMaterialIndex;

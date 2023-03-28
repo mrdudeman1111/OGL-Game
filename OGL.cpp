@@ -137,16 +137,17 @@ void Camera::PollInputs(float DeltaTime)
 
     Yaw -= (x - MousePos.x) * DeltaTime * 1.f;
     Pitch -= (y - MousePos.y) * DeltaTime * 1.f;
-    if(Pitch >= M_PI)
+    if(Pitch >= M_PI/2.f)
     {
-        Pitch = M_PI;
+        Pitch = M_PI/2.f;
     }
-    else if(Pitch <= -M_PI)
+    else if(Pitch <= -M_PI/2.f)
     {
-        Pitch = -M_PI;
+        Pitch = -M_PI/2.f;
     }
 
     MousePos = glm::vec2(x, y);
+    printf("Rotation: %.2f, %.2f, %.2f\n", Pitch, Roll, Yaw);
 }
 
 void PrintVec(glm::vec4& Vec)
@@ -215,6 +216,7 @@ int main()
     std::cout << "VertShader:\n" << VertCode << std::endl;
     glShaderSource(VertShader, 1, &VertCode, NULL);
     glCompileShader(VertShader);
+    delete VertCode;
 
     int success;
     char infoLog[512];
@@ -230,6 +232,7 @@ int main()
     std::cout << "Frag Shader:\n" << FragCode << std::endl;
     glShaderSource(FragShader, 1, &FragCode, NULL);
     glCompileShader(FragShader);
+    delete FragCode;
 
     glGetShaderiv(FragShader, GL_COMPILE_STATUS, &success);
     if (!success)
@@ -328,8 +331,8 @@ int main()
         Camera.Update();
 
         glUseProgram(Program);
-        glBindTexture(GL_TEXTURE_2D, Cube.Texture);
         glBindBufferBase(GL_UNIFORM_BUFFER, 0, Camera.Handle);
+        glBindTexture(GL_TEXTURE_2D, Cube.Texture);
         glBindVertexArray(Cube.VertexAttribs);
         glDrawElements(GL_TRIANGLES, Cube.Indices.size(), GL_UNSIGNED_INT, 0);
 

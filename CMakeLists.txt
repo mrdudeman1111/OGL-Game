@@ -1,18 +1,20 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.18.1)
 project("Opengl Project")
 
-find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(glfw3 REQUIRED)
-find_package(glm REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
+find_package(GLEW CONFIG REQUIRED)
+find_package(Sail CONFIG REQUIRED)
 
 file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 
-add_executable(Opengl ${SOURCES})
-# add_executable(Tester ${CMAKE_CURRENT_SOURCE_DIR}/Test.cpp)
+add_compile_definitions(SourceDir="${CMAKE_SOURCE_DIR}")
 
-target_link_libraries(Opengl GLEW OpenGL glfw assimp glm)
-# target_link_libraries(Tester glm)
+add_executable(Game ${SOURCES})
+
+target_link_libraries(Game glfw opengl::opengl glm::glm GLEW::GLEW assimp::assimp SAIL::SailC++)
+

@@ -1,1 +1,0 @@
-/usr/bin/g++ -g CMakeFiles/OGL.dir/OGL.cpp.o -o OGL  -lOpenGL /usr/lib/libglfw.so.3.3 -lGLEW 
